@@ -83,24 +83,47 @@ class Node:
     def draw(self, win):
         pygame.draw.rect(win, self.color, (self.x, self.y, self.width, self.width))
 
+    ## updated for diagonal
     def update_neighbors(self, grid):
         self.neighbors = []
-        # going DOWN or RIGHT
+        # going DOWN
         if self.row < self.total_rows - 1:
-            if not grid[self.row + 1][self.col].is_barrier(): # going DOWN a row (checking if can move down)
+            # going DOWN a row (checking if can move down)
+            if not grid[self.row + 1][self.col].is_barrier(): 
                 self.neighbors.append(grid[self.row + 1][self.col])
 
-        if self.row > 0 and not grid[self.row - 1][self.col].is_barrier(): # going UP a row (checking if we can move up)
-            self.neighbors.append(grid[self.row - 1][self.col])
+            # going DOWN and RIGHT
+            if self.row < self.total_rows - 1 and not grid[self.row + 1][self.col + 1].is_barrier(): 
+                self.neighbors.append(grid[self.row + 1][self.col + 1])
+            
+            # going DOWN and LEFT
+            if self.row > 0 and not grid[self.row + 1][self.col - 1].is_barrier(): 
+                self.neighbors.append(grid[self.row + 1][self.col - 1])
+            
+        # going UP
+        if self.row > 0:
+            # going UP a row (checking if we can move up)
+            if not grid[self.row - 1][self.col].is_barrier(): 
+                self.neighbors.append(grid[self.row - 1][self.col])
+            
+            # going UP and RIGHT
+            if self.col < self.total_rows - 1 and not grid[self.row- 1][self.col + 1].is_barrier():
+                self.neighbors.append(grid[self.row - 1][self.col + 1])
 
-        if self.col < self.total_rows - 1 and not grid[self.row][self.col + 1].is_barrier(): # going RIGHT a row (checking if we can move right)
-            self.neighbors.append(grid[self.row][self.col + 1])
+            # going UP and LEFT
+            if self.col > 0 and not grid[self.row- 1][self.col - 1].is_barrier():
+                self.neighbors.append(grid[self.row - 1][self.col - 1])
+        
+        # GOING RIGHT
+        if self.col < self.total_rows - 1:
+            if not grid[self.row][self.row + 1].is_barrier():
+                self.neighbors.append(grid[self.row][self.col + 1])
 
-        # greater than 0 because this is left of the screen, similar for going up as it is the top
-        if self.col > 0 and not grid[self.row][self.col - 1].is_barrier(): # going LEFT a row (checking if we can move left)
-            self.neighbors.append(grid[self.row][self.col - 1])
+        # GOING LEFT
+        if self.col > 0:
+            if not grid[self.row][self.col - 1].is_barrier():
+                self.neighbors.append(grid[self.row][self.col - 1])
 
-    # less than function to compare two Node objects together
     # similar to compareTo in Java
     def __lt__ (self, other):
         return False
