@@ -85,19 +85,17 @@ class Node:
 
     def update_neighbors(self, grid):
         self.neighbors = []
-        # checking if the row we are at is less than the total amount of rows - 1, else crash program because can not go down
         if self.row < self.total_rows - 1 and not grid[self.row + 1][self.col].is_barrier(): # going DOWN a row (checking if can move down)
-            # then append the next row down
             self.neighbors.append(grid[self.row + 1][self.col])
 
         if self.row > 0 and not grid[self.row - 1][self.col].is_barrier(): # going UP a row (checking if we can move up)
             self.neighbors.append(grid[self.row - 1][self.col])
 
-        if self.row < self.total_rows - 1 and not grid[self.row][self.col + 1].is_barrier(): # going RIGHT a row (checking if we can move right)
+        if self.col < self.total_rows - 1 and not grid[self.row][self.col + 1].is_barrier(): # going RIGHT a row (checking if we can move right)
             self.neighbors.append(grid[self.row][self.col + 1])
 
         # greater than 0 because this is left of the screen, similar for going up as it is the top
-        if self.row > 0 and not grid[self.row][self.col - 1].is_barrier(): # going LEFT a row (checking if we can move left)
+        if self.col > 0 and not grid[self.row][self.col - 1].is_barrier(): # going LEFT a row (checking if we can move left)
             self.neighbors.append(grid[self.row][self.col - 1])
 
 
