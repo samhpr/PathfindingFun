@@ -16,7 +16,7 @@ RED = (255, 0 , 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 YELLOW = (255, 255, 0)
-
+PURPLE = (230,230,250)
 
 # pygame init
 WIDTH = 800
@@ -46,7 +46,7 @@ class Node:
     
     # open set or option
     def is_open(self):
-        return self.color == GREEN
+        return self.color == YELLOW
     
     def is_barrier(self):
         return self.color == BLACK
@@ -55,7 +55,7 @@ class Node:
         return self.color == BLUE
     
     def is_end(self):
-        return self.color == GRAY
+        return self.color == PURPLE
     
     def reset(self):
         self.color = WHITE
@@ -65,7 +65,7 @@ class Node:
         self.color = RED
     
     def make_open(self):
-        self.color = GRAY
+        self.color = YELLOW
     
     def make_barrier(self):
         self.color = BLACK
@@ -74,10 +74,10 @@ class Node:
         self.color = BLUE
     
     def make_end(self):
-        self.color = GREEN
+        self.color = PURPLE
 
     def make_path(self):
-        self.color = YELLOW
+        self.color = GREEN
 
     # method called to draw cube on screen
     def draw(self, win):
@@ -293,7 +293,7 @@ def main(win, width):
                     #           https://www.geeksforgeeks.org/python-lambda-anonymous-functions-filter-map-reduce/
                     algorithm(lambda: draw(win, grid, ROWS, width), grid, start, end)
             
-                if pygame.mouse.get_pressed()[1]:
+                if event.key == pygame.K_c:
                     start = None
                     end = None
                     grid = make_grid(ROWS, width)
