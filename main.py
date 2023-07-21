@@ -93,11 +93,11 @@ class Node:
                 self.neighbors.append(grid[self.row + 1][self.col])
 
             # going DOWN and RIGHT
-            if self.row < self.total_rows - 1 and not grid[self.row + 1][self.col + 1].is_barrier(): 
+            if self.col < self.total_rows - 1 and not grid[self.row + 1][self.col + 1].is_barrier(): 
                 self.neighbors.append(grid[self.row + 1][self.col + 1])
             
             # going DOWN and LEFT
-            if self.row > 0 and not grid[self.row + 1][self.col - 1].is_barrier(): 
+            if self.col > 0 and not grid[self.row + 1][self.col - 1].is_barrier(): 
                 self.neighbors.append(grid[self.row + 1][self.col - 1])
             
         # going UP
@@ -116,7 +116,7 @@ class Node:
         
         # GOING RIGHT
         if self.col < self.total_rows - 1:
-            if not grid[self.row][self.row + 1].is_barrier():
+            if not grid[self.row][self.col + 1].is_barrier():
                 self.neighbors.append(grid[self.row][self.col + 1])
 
         # GOING LEFT
