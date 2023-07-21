@@ -88,17 +88,20 @@ class Node:
         # checking if the row we are at is less than the total amount of rows - 1, else crash program because can not go down
         if self.row < self.total_rows - 1 and not grid[self.row + 1][self.col].is_barrier(): # going DOWN a row (checking if can move down)
             # then append the next row down
-            self.neighbors.append(grid[self.row + 1][self.col].is_barrier())
+            self.neighbors.append(grid[self.row + 1][self.col])
 
         if self.row > 0 and not grid[self.row - 1][self.col].is_barrier(): # going UP a row (checking if we can move up)
-            self.neighbors.append(grid[self.row - 1][self.col].is_barrier())
+            self.neighbors.append(grid[self.row - 1][self.col])
 
         if self.row < self.total_rows - 1 and not grid[self.row][self.col + 1].is_barrier(): # going RIGHT a row (checking if we can move right)
-            self.neighbors.append(grid[self.row][self.col + 1].is_barrier())
+            self.neighbors.append(grid[self.row][self.col + 1])
 
         # greater than 0 because this is left of the screen, similar for going up as it is the top
         if self.row > 0 and not grid[self.row][self.col - 1].is_barrier(): # going LEFT a row (checking if we can move left)
-            self.neighbors.append(grid[self.row][self.col - 1].is_barrier())
+            self.neighbors.append(grid[self.row][self.col - 1])
+
+
+
 
     # less than function to compare two Node objects together
     # similar to compareTo in Java
@@ -111,26 +114,38 @@ def h(p1, p2):
     # return absolute distance to find the L distance
     return abs(x1 - x2) + abs(y1 - y2)
 
+def reconstruct_path(is_from, currNode, draw):
+    # traverse from start to the end and draw it
+    while currNode in is_from:
+        currNode = is_from[currNode]
+        currNode.makePath()
+        draw()
+
+
 def algorithm(draw, grid, start, end):
     count = 0
     open_set = PriorityQueue()
     # 'push' is same as 'put'
     # we can use count to consider the tiebreakers (same F score)
     # .put('fscore', 'number', 'current node')
+
+    # creating open set and put start node inside
     open_set.put((0, count, start))
+    # keeps track of which nodes came from where to find best path at the end
     is_from = {}
-    # dictionary for the g score
+    # keeps track of the shortest distance from the start node, to the current node
     g_score = {Node: float("inf") for row in grid for spot in row}
     g_score[start] = 0
-    # f score is the heuristic because we want to estimate how far end node is from the start node and give that a score
+    # keeps track of the predicted distance from current node to the end node, following path with current node, what the distance will be to the end node
     f_score = {Node: float("inf") for row in grid for spot in row}
+    # f score is the heuristic because we want to estimate how far end node is from the current node and give that a score
     f_score[start] = h(start.get_pos(), end.get_pos())
 
     # we want to make a set because the priority queue needs to be checked if there is something in it
     # aka, it keeps track of the items in the priority queue, and able to check
     open_set_hash = {start}
 
-    # run until open set is empty, considered every possible node and path does not exist
+    # run until open set is empty, considered every possible node and path does not exist, or open set has nothing
     while not open_set.empty():
         for event in pygame.event.get():
             # feature to allow user to quit from while loop
@@ -138,15 +153,20 @@ def algorithm(draw, grid, start, end):
                 pygame.quit()
         
         # start at 2 because we want to skip past start and end nodes
+        # we can get the lowest number (current node) using priority queue as it keeps track the lowest number for example
         currNode = open_set.get()[2]
         # take whatever node from queue and ensure there are no duplicates by syncing with open set hash
         open_set_hash.remove(currNode)
 
+        # say that if we are at the end, then we have finished
         if currNode == end:
+            reconstruct_path(is_from, end, draw)
+            end.make_end()
             return True
         
-        # consider all neighbors of current node
+        # otherwise consider all neighbors of current node
         for neighbor in currNode.neighbors:
+            # calculate their tentative g score
             temp_g_score = g_score[currNode] + 1
 
             # if we found a better neighbor (g score) than the current, then we update values for better path
@@ -155,6 +175,7 @@ def algorithm(draw, grid, start, end):
                 g_score[neighbor] = temp_g_score
                 # find row column pos of the neighbor and add to f score with temp g score
                 f_score[neighbor] = temp_g_score + h(neighbor.get_pos(), end.get_pos())
+                # add if not already in open set hash
                 if neighbor not in open_set_hash:
                     # add to count to add it to the set, and then also put it into the set
                     count += 1
@@ -168,6 +189,9 @@ def algorithm(draw, grid, start, end):
         # so if the node we have already considered does not work, then close it
         if currNode != start:
             currNode.make_closed()
+
+    # if we did not find a path       
+    return False
 
 
 def make_grid(rows, width):
@@ -268,7 +292,7 @@ def main(win, width):
                 if event.key == pygame.K_SPACE and not started:
                     for row in grid:
                         for node in row:
-                            node.update_neighbors()
+                            node.update_neighbors(grid)
 
                     # passing function that is equal to function call, Lamda is an anonymous function
                     # for example, x = Lamda: print("hello")
