@@ -85,8 +85,10 @@ class Node:
 
     def update_neighbors(self, grid):
         self.neighbors = []
-        if self.row < self.total_rows - 1 and not grid[self.row + 1][self.col].is_barrier(): # going DOWN a row (checking if can move down)
-            self.neighbors.append(grid[self.row + 1][self.col])
+        # going DOWN or RIGHT
+        if self.row < self.total_rows - 1:
+            if not grid[self.row + 1][self.col].is_barrier(): # going DOWN a row (checking if can move down)
+                self.neighbors.append(grid[self.row + 1][self.col])
 
         if self.row > 0 and not grid[self.row - 1][self.col].is_barrier(): # going UP a row (checking if we can move up)
             self.neighbors.append(grid[self.row - 1][self.col])
