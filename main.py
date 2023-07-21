@@ -16,7 +16,7 @@ RED = (255, 0 , 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 YELLOW = (255, 255, 0)
-PURPLE = (230,230,250)
+PURPLE = (138, 43, 226)
 
 # pygame init
 WIDTH = 800
