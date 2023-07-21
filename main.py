@@ -46,7 +46,7 @@ class Node:
     
     # open set or option
     def is_open(self):
-        return self.color == GRAY
+        return self.color == GREEN
     
     def is_barrier(self):
         return self.color == BLACK
@@ -55,7 +55,7 @@ class Node:
         return self.color == BLUE
     
     def is_end(self):
-        return self.color == GREEN
+        return self.color == GRAY
     
     def reset(self):
         self.color = WHITE
@@ -113,7 +113,7 @@ def reconstruct_path(is_from, currNode, draw):
     # traverse from start to the end and draw it
     while currNode in is_from:
         currNode = is_from[currNode]
-        currNode.makePath()
+        currNode.make_path()
         draw()
 
 
@@ -129,10 +129,10 @@ def algorithm(draw, grid, start, end):
     # keeps track of which nodes came from where to find best path at the end
     is_from = {}
     # keeps track of the shortest distance from the start node, to the current node
-    g_score = {Node: float("inf") for row in grid for spot in row}
+    g_score = {node: float("inf") for row in grid for node in row}
     g_score[start] = 0
     # keeps track of the predicted distance from current node to the end node, following path with current node, what the distance will be to the end node
-    f_score = {Node: float("inf") for row in grid for spot in row}
+    f_score = {node: float("inf") for row in grid for node in row}
     # f score is the heuristic because we want to estimate how far end node is from the current node and give that a score
     f_score[start] = h(start.get_pos(), end.get_pos())
 
@@ -177,7 +177,7 @@ def algorithm(draw, grid, start, end):
                     # add back into open set 
                     open_set.put((f_score[neighbor], count, neighbor))
                     open_set_hash.add(neighbor)
-                    neighbor.make_opened()
+                    neighbor.make_open()
         draw()
         
         # if current is not the start node, then make it closed
