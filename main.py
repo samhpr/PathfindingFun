@@ -244,7 +244,6 @@ def main(win, width):
     end = None
 
     run = True
-    started = False
 
     # while this loop, go through all of the events that happened
     while run:
@@ -252,8 +251,6 @@ def main(win, width):
         for event in pygame.event.get():
             if(event.type == pygame.QUIT):
                 run = False
-            if started:
-                continue
             
             # check if pygame mouse is left mouse([0]) then do...
             if pygame.mouse.get_pressed()[0]:
@@ -284,7 +281,7 @@ def main(win, width):
                     end = None
 
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE and not started:
+                if event.key == pygame.K_SPACE and start and end:
                     for row in grid:
                         for node in row:
                             node.update_neighbors(grid)
@@ -295,6 +292,11 @@ def main(win, width):
                     # essentially, a function without a name, more info: 
                     #           https://www.geeksforgeeks.org/python-lambda-anonymous-functions-filter-map-reduce/
                     algorithm(lambda: draw(win, grid, ROWS, width), grid, start, end)
+            
+                if pygame.mouse.get_pressed()[1]:
+                    start = None
+                    end = None
+                    grid = make_grid(ROWS, width)
 
     pygame.quit()
 
