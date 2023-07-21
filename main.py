@@ -98,9 +98,6 @@ class Node:
         if self.col > 0 and not grid[self.row][self.col - 1].is_barrier(): # going LEFT a row (checking if we can move left)
             self.neighbors.append(grid[self.row][self.col - 1])
 
-
-
-
     # less than function to compare two Node objects together
     # similar to compareTo in Java
     def __lt__ (self, other):
