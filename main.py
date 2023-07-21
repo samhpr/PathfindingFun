@@ -138,12 +138,36 @@ def algorithm(draw, grid, start, end):
                 pygame.quit()
         
         # start at 2 because we want to skip past start and end nodes
-        current = open_set.get()[2]
+        currNode = open_set.get()[2]
         # take whatever node from queue and ensure there are no duplicates by syncing with open set hash
-        open_set_hash.remove(current)
+        open_set_hash.remove(currNode)
 
-        if current == end:
-            pass # make path
+        if currNode == end:
+            return True
+        
+        # consider all neighbors of current node
+        for neighbor in currNode.neighbors:
+            temp_g_score = g_score[currNode] + 1
+
+            # if we found a better neighbor (g score) than the current, then we update values for better path
+            if temp_g_score < g_score[neighbor]:
+                is_from[neighbor] = currNode
+                g_score[neighbor] = temp_g_score
+                # find row column pos of the neighbor and add to f score with temp g score
+                f_score[neighbor] = temp_g_score + h(neighbor.get_pos(), end.get_pos())
+                if neighbor not in open_set_hash:
+                    # add to count to add it to the set, and then also put it into the set
+                    count += 1
+                    # add back into open set 
+                    open_set.put((f_score[neighbor], count, neighbor))
+                    open_set_hash.add(neighbor)
+                    neighbor.make_opened()
+        draw()
+        
+        # if current is not the start node, then make it closed
+        # so if the node we have already considered does not work, then close it
+        if currNode != start:
+            currNode.make_closed()
 
 
 def make_grid(rows, width):
