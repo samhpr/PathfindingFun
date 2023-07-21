@@ -157,6 +157,7 @@ def algorithm(draw, grid, start, end):
         if currNode == end:
             reconstruct_path(is_from, end, draw)
             end.make_end()
+            start.make_start()
             return True
         
         # otherwise consider all neighbors of current node
