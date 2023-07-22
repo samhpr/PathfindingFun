@@ -83,7 +83,7 @@ class Node:
     def draw(self, win):
         pygame.draw.rect(win, self.color, (self.x, self.y, self.width, self.width))
 
-    ## updated for diagonal
+    ## updated for diagonal - seemed to make the program much more efficient
     def update_neighbors(self, grid):
         self.neighbors = []
         # going DOWN
